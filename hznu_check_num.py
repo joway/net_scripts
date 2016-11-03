@@ -9,7 +9,7 @@ api = 'http://my.hznu.edu.cn/getBackPasswordByQuestion.portal'
 
 def log(msg):
     with open('teacher.txt', 'a+') as file:
-        msg += '\n'
+        msg = str(msg) + '\n'
         print(msg)
         file.write(msg)
 
