@@ -6,6 +6,7 @@ __pycache__/
 pwd.txt
 # C extensions
 *.so
+teacher.txt
 
 # Distribution / packaging
 .Python
