@@ -33,7 +33,10 @@ def random_handle(data, X, Y):
             Z = str(z)
         PWD = X + Y + Z
         data['IDToken2'] = PWD
-        resp = requests.post(api, data=data, headers=headers, allow_redirects=False)
+        try:
+            resp = requests.post(api, data=data, headers=headers, allow_redirects=False)
+        except:
+            continue
         if resp.status_code == 200:
             pass
             # print('user : %s\'s pwd is not %s' % (data['IDToken1'], PWD))
